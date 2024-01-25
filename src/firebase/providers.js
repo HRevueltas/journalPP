@@ -23,6 +23,7 @@ export const signInWithGoogle = async () => {
 
         return {
             ok: false,
+            errorMessage
         }
 
     }
