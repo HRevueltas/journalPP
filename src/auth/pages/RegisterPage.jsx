@@ -3,6 +3,8 @@ import { Button, Grid, Link, TextField, Typography } from "@mui/material"
 import { Link as RouterLink } from 'react-router-dom'
 import { useForm } from "../../hooks/useForm"
 import { useState } from "react"
+import { useDispatch } from "react-redux"
+import { startCreatingUserWithEmailPassword } from "../../store/auth/thunk"
 
 
 
@@ -36,17 +38,25 @@ const formValidations = {
 
 
 export const RegisterPage = () => {
+
+  const dispatch = useDispatch();
+
   const [formSubmitted, setFormSubmitted] = useState(false)
 
+  // valores form
   const {
     formState, displayName, email, password, onInputChange,
     isFormValid, displayNameValid, emailValid, passwordValid,
   } = useForm(formData, formValidations);
 
-  console.log(emailValid);
+
+  // manejar el submit
   const onSubmit = (event) => {
     event.preventDefault();
-    setFormSubmitted(true)
+    setFormSubmitted(true);
+    if (!isFormValid) return;
+
+    dispatch(startCreatingUserWithEmailPassword(formState));
     console.log(formState);
   }
 
@@ -96,7 +106,7 @@ export const RegisterPage = () => {
             <TextField
               label={'password'}
               type="password"
-              placeholder=""
+              placeholder="password"
               fullWidth
               name="password"
               value={password}
@@ -112,7 +122,7 @@ export const RegisterPage = () => {
           {/* botones */}
           <Grid container spacing={2} sx={{ mb: 2, mt: 1 }}>
             <Grid item xs={12} sm={12}>
-              <Button variant="contained" fullWidth type="submit"  >Create account</Button>
+              <Button variant="contained" fullWidth type="submit" >Create account</Button>
             </Grid>
 
           </Grid>
