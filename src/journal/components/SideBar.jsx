@@ -1,12 +1,15 @@
-import { TurnLeftOutlined, TurnedInNot, TurnedInTwoTone } from "@mui/icons-material"
-import { Box, Divider, Drawer, Grid, List, ListItem, ListItemButton, ListItemIcon, ListItemText, Toolbar, Typography, toggleButtonClasses } from "@mui/material"
+import {  TurnedInNot } from "@mui/icons-material"
+import { Avatar, Box, Divider, Drawer, Grid, List, ListItem, ListItemButton, ListItemIcon, ListItemText, Toolbar, Typography, toggleButtonClasses } from "@mui/material"
+import { useSelector } from "react-redux"
 
 export const SideBar = ({ drawerWidth }) => {
+    const {displayName, photoURL } = useSelector(state => state.auth)
+
     return (
         <Box
             component={'nav'}
-            
-            sx={{ width: { sm: `${drawerWidth}px` }, flexShrink: { sm: 0 },  }}
+
+            sx={{ width: { sm: `${drawerWidth}px` }, flexShrink: { sm: 0 }, }}
         >
 
             <Drawer
@@ -18,8 +21,8 @@ export const SideBar = ({ drawerWidth }) => {
                 // }}
                 sx={{
                     display: { xs: 'block' },
-                    '& .MuiDrawer-paper': { 
-                        boxSizing: 'border-box', 
+                    '& .MuiDrawer-paper': {
+                        boxSizing: 'border-box',
                         width: drawerWidth,
                         overflow: 'auto', // Asegúrate de que overflow sea 'auto' para que la barra de desplazamiento sea visible
                     },
@@ -34,8 +37,10 @@ export const SideBar = ({ drawerWidth }) => {
             >
 
                 <Toolbar>
+                    
+                    <Avatar alt={displayName} src={photoURL} sx={{marginRight:2}} />
                     <Typography variant="h6" noWrap component={'div'} >
-                        Harold Revueltas
+                        {displayName}
                     </Typography>
                 </Toolbar>
                 <Divider />

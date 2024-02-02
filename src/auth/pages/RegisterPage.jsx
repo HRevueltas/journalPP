@@ -1,10 +1,11 @@
 import { AuthLayout } from "../layout/AuthLayout"
-import { Button, Grid, Link, TextField, Typography } from "@mui/material"
+import { Alert, Button, Grid, Link, TextField, Typography } from "@mui/material"
 import { Link as RouterLink } from 'react-router-dom'
 import { useForm } from "../../hooks/useForm"
-import { useState } from "react"
-import { useDispatch } from "react-redux"
+import { useMemo, useState } from "react"
+import { useDispatch, useSelector } from "react-redux"
 import { startCreatingUserWithEmailPassword } from "../../store/auth/thunk"
+import { Security } from "@mui/icons-material"
 
 
 
@@ -39,6 +40,9 @@ const formValidations = {
 
 export const RegisterPage = () => {
 
+  const { status, errorMessage } = useSelector(state => state.auth)
+  const isCheckingAuthentincation = useMemo(status => status === 'checking', [status])
+
   const dispatch = useDispatch();
 
   const [formSubmitted, setFormSubmitted] = useState(false)
@@ -57,13 +61,13 @@ export const RegisterPage = () => {
     if (!isFormValid) return;
 
     dispatch(startCreatingUserWithEmailPassword(formState));
-    console.log(formState);
   }
 
 
   return (
     <AuthLayout title="Register">
-      <form onSubmit={onSubmit}>
+
+      <form onSubmit={onSubmit} className="animate__animated animate__fadeIn animate__faster">
         <Grid
           container
         >
@@ -121,8 +125,18 @@ export const RegisterPage = () => {
 
           {/* botones */}
           <Grid container spacing={2} sx={{ mb: 2, mt: 1 }}>
+          <Grid item xs={12} sm={12} display={!!errorMessage?'':'none'}>
+              <Alert severity="error" >
+                {errorMessage}
+              </Alert>
+            </Grid>
             <Grid item xs={12} sm={12}>
-              <Button variant="contained" fullWidth type="submit" >Create account</Button>
+              <Button
+                disabled={isCheckingAuthentincation}
+                variant="contained"
+                fullWidth
+                type="submit"
+              >Create account</Button>
             </Grid>
 
           </Grid>

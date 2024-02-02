@@ -1,4 +1,4 @@
-import { GoogleAuthProvider, createUserWithEmailAndPassword, signInWithPopup } from 'firebase/auth'
+import { GoogleAuthProvider, createUserWithEmailAndPassword, signInWithEmailAndPassword, signInWithPopup, updateProfile } from 'firebase/auth'
 import { FirebaseAuth } from './config';
 
 const googleProvider = new GoogleAuthProvider();
@@ -21,8 +21,6 @@ export const signInWithGoogle = async () => {
         const errorCode = error.code;
         const errorMessage = error.message;
 
-        console.log({ error });
-
         return {
             ok: false,
             errorMessage
@@ -32,27 +30,52 @@ export const signInWithGoogle = async () => {
 }
 
 // registrar user con email y password
-export const registerUserWithEmailPassword = async ({ email, password }) => {
+export const registerUserWithEmailPassword = async ({ email, password, displayName }) => {
 
     try {
-        const resp = await createUserWithEmailAndPassword(FirebaseAuth, email, password )
-        const {uid, photoURL} = resp.user
-        console.log(resp);
+        const resp = await createUserWithEmailAndPassword(FirebaseAuth, email, password)
+        const { uid, photoURL } = resp.user
+        // TODO : Actualizar displayName en firebase
 
-        return{
-            ok:true,
-            uid, photoURL
-         }
+        await updateProfile(FirebaseAuth.currentUser, { displayName })
+        return {
+            ok: true,
+            uid, photoURL, displayName, email
+        }
 
 
     } catch (error) {
 
-        console.log(error);
-
         return {
             ok: false,
-            errorMessage: error.message
+            errorMessage: error.message,
         }
     }
 
 }
+
+export const loginWithEmailPassword = async ({email,password}) => {
+
+    try {
+        const resp = await signInWithEmailAndPassword(FirebaseAuth, email, password)
+        const { displayName, photoURL, uid } = resp.user
+
+
+        return {
+            ok: true,
+             displayName, photoURL, uid
+        }
+    } catch (error) {
+        return {
+            ok: false,
+            errorMessage: error.message,
+        }
+    }
+
+}
+
+export const logoutFirebase = async()=>{
+
+    return await FirebaseAuth.signOut()
+}
+
