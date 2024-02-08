@@ -8,14 +8,12 @@ import { useJournalChange } from "../../hooks/useJournalChange"
 import { startSaveNote, startUploadingFiles } from "../../store/journal"
 import Swal from "sweetalert2"
 import 'sweetalert2/dist/sweetalert2.css'
-import { useFileDrop } from "../../hooks/useFileDrop"
 
 
 
 export const NoteView = () => {
-    const { isDrag, droppedFiles, handleDragLeave, handleDragOver, handleDrop } = useFileDrop()
     const dispatch = useDispatch()
-    const { active: note, messageSaved, isSaving } = useSelector(state => state.journal)
+    const { active:note, messageSaved, isSaving } = useSelector(state => state.journal)
 
     const { body, title, date, formState, onInputChange } = useForm(note)
     useJournalChange(formState)
@@ -34,11 +32,6 @@ export const NoteView = () => {
         }
     }, [messageSaved])
 
-    // useEffect(() => {
-    //     if (droppedFiles.length > 0) {
-    //         handleDropFiles(); // Procesa los archivos soltados
-    //     }
-    // }, [droppedFiles]);
 
     const onSaveNote = () => {
         dispatch(startSaveNote())
@@ -47,17 +40,9 @@ export const NoteView = () => {
     const onFileInputChange = ({ target }) => {
         if (target.files === 0) return;
         dispatch(startUploadingFiles(target.files))
-        console.log(target.files);
-
     }
-    // const handleDropFiles = () => {
-    //     // if (!droppedFiles) throw new Error('no se ha cargado') 
-    //     if (droppedFiles === 0) throw new Error('no se ha cargado')
-
-    //     dispatch(startUploadingFiles(droppedFiles));
-    // };
-
-
+    
+    
 
     return (
         <Grid
@@ -100,7 +85,7 @@ export const NoteView = () => {
                 />
             </Grid>
 
-            <Grid item sx={{ mt: 1, flexDirection:"column", alignItems:"center" , justifyContent:"center" }} >
+            <Grid item sx={{ mt: 1, flexDirection: "column", alignItems: "center", justifyContent: "center" }} >
                 <Button disabled={isSaving} onClick={onSaveNote} color="primary" sx={{ alignItems: 'center', justifyContent: 'center' }} >
                     <SaveOutlined sx={{ fontSize: 30, mr: 1 }} />
                     <Typography variant="p">Save</Typography>
@@ -115,11 +100,11 @@ export const NoteView = () => {
                     style={{ display: 'none' }}
                 />
                 <IconButton
-                color="primary"
-                disabled={isSaving}
-                onClick={() => fileInputRef.current.click()}
+                    color="primary"
+                    disabled={isSaving}
+                    onClick={() => fileInputRef.current.click()}
                 >
-                    <UploadOutlined/>
+                    <UploadOutlined />
                 </IconButton>
             </Grid>
 
@@ -148,7 +133,7 @@ export const NoteView = () => {
                 <Button sx={{ backgroundColor: 'primary.main', mt: 1, color: "white", fontWeight: 300, }} >Upload</Button>
             </Grid> */}
 
-            <ImageGallery />
+            <ImageGallery images={note.imageUrl} title={note.title} />
         </Grid>
     )
 }

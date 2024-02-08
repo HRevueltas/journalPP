@@ -1,15 +1,15 @@
-import { Store, TurnedInNot } from "@mui/icons-material"
+import { Store, TurnedIn, TurnedInNot } from "@mui/icons-material"
 import { Grid, ListItem, ListItemButton, ListItemIcon, ListItemText } from "@mui/material"
 import { useMemo } from "react"
-import { useDispatch } from "react-redux"
+import { useDispatch, useSelector } from "react-redux"
 import { setActiveNote } from "../../store/journal"
-
-export const SideBarItem = ({ title = '', id, body, imageUrl=[] , date }) => {
-
+import './sideBarItem.css'
+export const SideBarItem = ({ title = '', id, body, imageUrl = [], date, }) => {
+const {active} = useSelector(state => state.journal)
   const dispatch = useDispatch()
 
   const onClickNote = () => {
-    dispatch(setActiveNote({title,id, body,imageUrl, date} ))
+    dispatch(setActiveNote({ title, id, body, imageUrl, date }))
   }
   const newTitle = useMemo(() => {
 
@@ -18,13 +18,14 @@ export const SideBarItem = ({ title = '', id, body, imageUrl=[] , date }) => {
       : title
   }, [title])
   return (
-    <ListItem disablePadding onClick={onClickNote} >
+    <ListItem disablePadding onClick={onClickNote} className={`${active && active.id  === id ? 'animationBorder':''} `}>
       <ListItemButton>
         <ListItemIcon  >
 
-          <TurnedInNot />
+   <TurnedInNot />
+          
         </ListItemIcon>
-        <Grid container  >
+        <Grid container padding={1}  >
 
           <ListItemText primary={newTitle} />
           <ListItemText secondary={body} />

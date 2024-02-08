@@ -25,6 +25,7 @@ export const journalSlice = createSlice({
             state.isSaving = true
         },
         addNewEmptyNote: (state, action) => {
+            console.log(action.payload);
             state.notes.push(action.payload)
             state.isSaving = false
         },
