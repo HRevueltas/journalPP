@@ -7,15 +7,17 @@ import { Alert, Button, Grid, Link, TextField, Typography } from "@mui/material"
 import { Google } from "@mui/icons-material"
 import { Link as RouterLink } from 'react-router-dom'
 
+
+const formData={
+  email: '',
+  password: ''
+}
 export const LoginPage = () => {
 
   const { status, errorMessage } = useSelector(state => state.auth)
 
   const dispatch = useDispatch();
-  const { email, password, onInputChange, formState } = useForm({
-    email: '',
-    password: ''
-  });
+  const { email, password, onInputChange, formState } = useForm(formData);
 
   const isAuthenticating = useMemo(() => status === 'checking', [status])
 
