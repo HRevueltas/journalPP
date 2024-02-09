@@ -1,11 +1,11 @@
-import { SaveOutlined, UploadOutlined } from "@mui/icons-material"
+import { DeleteOutline, SaveOutlined, UploadOutlined } from "@mui/icons-material"
 import { Button, Grid, IconButton, TextField, Typography } from "@mui/material"
 import { ImageGallery } from "./ImageGallery"
 import { useDispatch, useSelector } from "react-redux"
 import { useForm } from "../../hooks"
 import { useEffect, useMemo, useRef, useState } from "react"
 import { useJournalChange } from "../../hooks/useJournalChange"
-import { startSaveNote, startUploadingFiles } from "../../store/journal"
+import { startDeletingNote, startSaveNote, startUploadingFiles } from "../../store/journal"
 import Swal from "sweetalert2"
 import 'sweetalert2/dist/sweetalert2.css'
 
@@ -13,7 +13,7 @@ import 'sweetalert2/dist/sweetalert2.css'
 
 export const NoteView = () => {
     const dispatch = useDispatch()
-    const { active:note, messageSaved, isSaving } = useSelector(state => state.journal)
+    const { active: note, messageSaved, isSaving } = useSelector(state => state.journal)
 
     const { body, title, date, formState, onInputChange } = useForm(note)
     useJournalChange(formState)
@@ -41,8 +41,10 @@ export const NoteView = () => {
         if (target.files === 0) return;
         dispatch(startUploadingFiles(target.files))
     }
-    
-    
+
+    const onDelete = () => {
+        dispatch(startDeletingNote())
+    }
 
     return (
         <Grid
@@ -85,7 +87,7 @@ export const NoteView = () => {
                 />
             </Grid>
 
-            <Grid item sx={{ mt: 1, flexDirection: "column", alignItems: "center", justifyContent: "center" }} >
+            <Grid item sx={{ mt: 1, flexDirection: "column", alignItems: "center", justifyContent: "space-between" }} >
                 <Button disabled={isSaving} onClick={onSaveNote} color="primary" sx={{ alignItems: 'center', justifyContent: 'center' }} >
                     <SaveOutlined sx={{ fontSize: 30, mr: 1 }} />
                     <Typography variant="p">Save</Typography>
@@ -106,7 +108,22 @@ export const NoteView = () => {
                 >
                     <UploadOutlined />
                 </IconButton>
+
+                <Button
+                    onClick={onDelete}
+                    color="error"
+                    disabled={isSaving}
+                    sx={{ ml: 2 }}
+
+                >
+                    <IconButton color="error" disabled={isSaving}>
+                        <DeleteOutline />
+
+                    </IconButton>
+                    Delete
+                </Button>
             </Grid>
+
 
             {/* <Grid
                 
@@ -132,6 +149,7 @@ export const NoteView = () => {
                 <Typography sx={{ fontSize: "16px" }}>or <b>click here</b> to select</Typography>
                 <Button sx={{ backgroundColor: 'primary.main', mt: 1, color: "white", fontWeight: 300, }} >Upload</Button>
             </Grid> */}
+
 
             <ImageGallery images={note.imageUrl} title={note.title} />
         </Grid>
