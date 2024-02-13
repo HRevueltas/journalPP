@@ -18,23 +18,20 @@ export const SideBar = ({ drawerWidth }) => {
             <Drawer
                 variant="permanent"
                 open={true}
-                // sx={{
-                //     display: { xs: 'block' },
-                //     '& .MuiDrawer-paper': { boxSizing: 'border-box', width: drawerWidth ,  },
-                // }}
+
                 sx={{
                     display: { xs: 'block' },
                     '& .MuiDrawer-paper': {
                         boxSizing: 'border-box',
                         width: drawerWidth,
-                        overflow: 'auto', // Asegúrate de que overflow sea 'auto' para que la barra de desplazamiento sea visible
+                        overflow: 'auto',
                     },
                     '& .MuiDrawer-paper::-webkit-scrollbar': {
-                        width: '10px', // Establece el ancho de la barra de desplazamiento
+                        width: '10px', 
                     },
                     '& .MuiDrawer-paper::-webkit-scrollbar-thumb': {
-                        backgroundColor: 'primary.main', // Color del pulgar de la barra de desplazamiento
-                        borderRadius: ' 5px', // Bordes redondeados del pulgar
+                        backgroundColor: 'primary.main', 
+                        borderRadius: ' 5px', 
                     },
                 }}
             >
@@ -47,10 +44,6 @@ export const SideBar = ({ drawerWidth }) => {
                     </Typography>
                 </Toolbar>
                 <Divider />
-
-
-
-                {/* list */}
 
                 <List>
                     {
