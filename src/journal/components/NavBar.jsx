@@ -1,15 +1,10 @@
-import { LogoutOutlined, MenuOutlined } from "@mui/icons-material"
-import { AppBar, Button, Grid, IconButton, Toolbar, Typography } from "@mui/material"
-import { useDispatch } from "react-redux"
-import { startLogout } from "../../store/auth/thunk"
+import {  MenuOutlined } from "@mui/icons-material"
+import { AppBar,Grid, IconButton, Toolbar, Typography } from "@mui/material"
+import { ThemeChanger } from "../../theme/ThemeChanger"
+import { useTheme } from "../../hooks/useTheme"
 
 export const NavBar = ({ drawerWidth = 240 }) => {
-
-    const dispatch = useDispatch()
-
-    const onLogout = () => {
-        dispatch(startLogout())
-    }
+    const { changeTheme } = useTheme();
     return (
 
         <AppBar
@@ -30,14 +25,11 @@ export const NavBar = ({ drawerWidth = 240 }) => {
 
                 <Grid container direction={'row'} justifyContent={'space-between'} alignItems={'center'} >
                     <Typography variant="h6" noWrap >
-                        JournalAPP
+                        Journal
                     </Typography>
 
-                    <Button></Button>
-                    <IconButton color="error" onClick={onLogout} >
+                    <ThemeChanger changeTheme={changeTheme} />
 
-                        <LogoutOutlined />
-                    </IconButton>
                 </Grid>
             </Toolbar>
         </AppBar>

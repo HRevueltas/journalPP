@@ -5,9 +5,6 @@ import { useForm } from "../../hooks/useForm"
 import { useMemo, useState } from "react"
 import { useDispatch, useSelector } from "react-redux"
 import { startCreatingUserWithEmailPassword } from "../../store/auth/thunk"
-import { Security } from "@mui/icons-material"
-
-
 
 const formData = {
   email: '',
@@ -77,7 +74,7 @@ export const RegisterPage = () => {
             <TextField
               label={'name'}
               type="text"
-              placeholder="Harold Revueltas"
+              placeholder="John Doe"
               fullWidth
               name="displayName"
               value={displayName}
@@ -110,7 +107,7 @@ export const RegisterPage = () => {
             <TextField
               label={'password'}
               type="password"
-              placeholder="password"
+              placeholder="•••••••••••"
               fullWidth
               name="password"
               value={password}
