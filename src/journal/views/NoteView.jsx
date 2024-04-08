@@ -1,52 +1,68 @@
-import { DeleteOutline, SaveOutlined, UploadOutlined } from "@mui/icons-material"
-import { Button, Grid, IconButton, TextField, Typography } from "@mui/material"
-import { ImageGallery } from "./ImageGallery"
-import { useDispatch, useSelector } from "react-redux"
-import { useForm } from "../../hooks"
-import { useEffect, useMemo, useRef, useState } from "react"
-import { useJournalChange } from "../../hooks/useJournalChange"
-import { startDeletingNote, startSaveNote, startUploadingFiles } from "../../store/journal"
-import Swal from "sweetalert2"
-import 'sweetalert2/dist/sweetalert2.css'
-
-
+import { DeleteOutline, SaveOutlined, UploadOutlined } from "@mui/icons-material";
+import { Button, Grid, IconButton, TextField, Typography } from "@mui/material";
+import { ImageGallery } from "./ImageGallery";
+import { useDispatch, useSelector } from "react-redux";
+import { useForm, useLocalStorage } from "../../hooks";
+import { useEffect, useMemo, useRef } from "react";
+import { useJournalChange } from "../../hooks/useJournalChange";
+import { setActiveNote, startDeletingNote, startSaveNote, startUploadingFiles } from "../../store/journal";
+import Swal from "sweetalert2";
+import 'sweetalert2/dist/sweetalert2.css';
 
 export const NoteView = () => {
-    const dispatch = useDispatch()
-    const { active: note, messageSaved, isSaving } = useSelector(state => state.journal)
+    const dispatch = useDispatch();
+    const { active: note, messageSaved, isSaving } = useSelector(state => state.journal);
 
-    const { body, title, date, formState, onInputChange } = useForm(note)
-    useJournalChange(formState)
+    const [localNote, setLocalNote] = useLocalStorage('lastNote', note);
+
+
+    // TODO:
+    // ?? guardar nota en local storage
+    // Set the active note to the last note from local storage when the component mounts
+    useEffect(() => {
+        if (localNote) {
+            dispatch(setActiveNote(localNote));
+        }
+    }, [dispatch, localNote]);
+
+    // Update the last note in local storage whenever the active note changes
+    useEffect(() => {
+        setLocalNote(note);
+    }, [note, setLocalNote]);
+    
+
+
+    const { body, title, date, formState, onInputChange } = useForm(note);
+    useJournalChange(formState);
 
     const dateString = useMemo(() => {
-        const newDate = new Date(date)
-        return newDate.toLocaleString()
+        const newDate = new Date(date);
+        return newDate.toLocaleString();
     }, [date]);
 
-    const fileInputRef = useRef()
-
+    const fileInputRef = useRef();
 
     useEffect(() => {
         if (messageSaved.length > 0) {
             Swal.fire('Nota guardada', messageSaved, 'success');
         }
-    }, [messageSaved])
-
+    }, [messageSaved]);
 
     const onSaveNote = () => {
-        dispatch(startSaveNote())
-    }
+        dispatch(startSaveNote());
+    };
 
     const onFileInputChange = ({ target }) => {
         if (target.files === 0) return;
-        dispatch(startUploadingFiles(target.files))
-    }
+        dispatch(startUploadingFiles(target.files));
+    };
 
     const onDelete = () => {
-        dispatch(startDeletingNote())
-    }
+        dispatch(startDeletingNote());
+    };
 
     return (
+        <>
         <Grid
             container
             direction={'row'}
@@ -54,13 +70,12 @@ export const NoteView = () => {
             alignItems={'center'}
             sx={{ mb: 1 }}
             className="animate__animated animate__fadeIn animate__faster"
-
         >
             <Grid item>
                 <Typography fontSize={39} fontWeight={'light'}>{dateString}</Typography>
             </Grid>
 
-            <Grid container >
+            <Grid container  >
                 <TextField
                     type="text"
                     variant="filled"
@@ -93,7 +108,6 @@ export const NoteView = () => {
                     <Typography variant="p">Save</Typography>
                 </Button>
 
-
                 <input
                     type="file"
                     multiple
@@ -114,44 +128,17 @@ export const NoteView = () => {
                     color="error"
                     disabled={isSaving}
                     sx={{ ml: 2 }}
-
                 >
                     <IconButton color="error" disabled={isSaving}>
                         <DeleteOutline />
-
                     </IconButton>
                     Delete
                 </Button>
             </Grid>
 
-
-            {/* <Grid
-                
-                container
-                direction={'column'}
-                justifyContent={'center'}
-                alignItems={'center'}
-                padding={10}
-                border={'3px dashed '}
-                mt={2}
-                disabled={isSaving}
-                sx={{ borderColor: isDrag ? 'green' : 'primary', opacity: isDrag ? .8 : 1, cursor: 'pointer', backgroundColor: '#00000010' }}
-                onDragOver={handleDragOver}
-                onDragLeave={handleDragLeave}
-                onDrop={(e) => {
-                    handleDrop(e);
-                    handleDropFiles(); // Procesa los archivos soltados
-                }}
-            >
-
-                <UploadOutlined disabled={isSaving} color="primary" fontSize="large" />
-                <Typography textAlign={'center'} sx={{ mt: 1, fontSize: "20px" }}>Drag & drop your images here</Typography>
-                <Typography sx={{ fontSize: "16px" }}>or <b>click here</b> to select</Typography>
-                <Button sx={{ backgroundColor: 'primary.main', mt: 1, color: "white", fontWeight: 300, }} >Upload</Button>
-            </Grid> */}
-
-
             <ImageGallery images={note.imageUrl} title={note.title} />
         </Grid>
-    )
-}
+
+        </>
+    );
+};

@@ -6,6 +6,7 @@ import { useMemo, useState } from "react"
 import { useDispatch, useSelector } from "react-redux"
 import { startCreatingUserWithEmailPassword } from "../../store/auth/thunk"
 
+
 const formData = {
   email: '',
   password: '',

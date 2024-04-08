@@ -8,6 +8,7 @@ export const SideBarItem = ({ title = '', id, body, imageUrl = [], date, }) => {
 const {active} = useSelector(state => state.journal)
   const dispatch = useDispatch()
 
+  
   const onClickNote = () => {
     dispatch(setActiveNote({ title, id, body, imageUrl, date }))
   }
